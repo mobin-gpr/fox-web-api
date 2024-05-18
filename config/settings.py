@@ -236,4 +236,5 @@ CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = [
     'https://example.com',  # Add your domain(s) here
     'http://localhost:8000',  # Add your development server domain
+    'http://localhost:3000', # Add your Next.js Development server domain
 ]
