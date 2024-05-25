@@ -7,12 +7,15 @@ from utils.network_services import get_ip
 
 now = timezone.now()
 
+
 # region - List Of Articles
 
 class ArticleListAPIView(ListAPIView):
     queryset = ArticleModel.objects.filter(is_published=True, pub_date__lt=now).order_by('-pub_date')
     serializer_class = ArticleSerializer
     lookup_field = 'slug'
+
+
 # endregion
 
 # region - Detail of Articles
@@ -31,11 +34,14 @@ class ArticleDetailAPIView(RetrieveAPIView):
 
         return super().get(request, *args, **kwargs)
 
+
 # endregion
 
 # region - Handle The Article Likes & Dislikes Reactions
 
 class ArticleReactionsAPIView(APIView):
+    serializer_class = ArticleReactionSerializer
+
     def post(self, request):
         serializer = ArticleReactionSerializer(data=request.data)
 
@@ -47,7 +53,7 @@ class ArticleReactionsAPIView(APIView):
 
             # Checks if article exists
             if ArticleModel.objects.filter(id=article_id).exists():
-            # If the user clicks on the like button
+                # If the user clicks on the like button
                 if reaction == 'like':
 
                     # Checks if the user has already liked the article, does nothing (You can customize it to delete the previous like if the user had already liked the article)
@@ -67,7 +73,7 @@ class ArticleReactionsAPIView(APIView):
                         response = {
                             'like': ArticleLikesModel.objects.filter(article_id=article_id).count(),
                             'dislike': ArticleDisLikesModel.objects.filter(article_id=article_id).count()
-                       }
+                        }
                 # If the user clicks on the dislike button
                 elif reaction == 'dislike':
                     # Checks if the user has already disliked the article, does nothing (You can customize it to delete the previous dislike if the user had already disliked the article)
