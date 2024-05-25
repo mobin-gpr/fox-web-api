@@ -22,8 +22,9 @@ class TagModel(models.Model):
 class ArticleModel(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
-    seo_description = models.CharField(max_length=200, null=True, blank=True)
-    content = CKEditor5Field(config_name='extends')
+    meta_description = models.CharField(max_length=200, null=True, blank=True)
+    # content = CKEditor5Field(config_name='extends')
+    content = models.TextField()
     slug = models.SlugField(max_length=400, unique=True)
     image = models.ImageField(upload_to='images/articles/')
     tag = models.ManyToManyField(TagModel)
