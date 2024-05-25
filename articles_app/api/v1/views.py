@@ -1,7 +1,5 @@
 from rest_framework.generics import ListAPIView, RetrieveAPIView
-from .models import ArticleModel, ArticleVisitModel, ArticleLikesModel, ArticleDisLikesModel
-from django.utils import timezone
-from .serializers import *
+from articles_app.api.v1.serializers import *
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView

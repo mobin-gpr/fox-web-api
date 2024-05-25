@@ -22,7 +22,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("ckeditor5/", include('django_ckeditor_5.urls')),
-    path('articles/', include('articles_app.urls')),
+    path('articles/api/v1/', include('articles_app.api.v1.urls')),
 ]
 
 urlpatterns += urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

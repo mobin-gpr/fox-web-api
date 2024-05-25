@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import *
+from articles_app.models import *
 from django.urls import reverse
 
 
