@@ -27,7 +27,7 @@ class ArticleModel(models.Model):
     content = models.TextField()
     slug = models.SlugField(max_length=400, unique=True)
     image = models.ImageField(upload_to='images/articles/')
-    tag = models.ManyToManyField(TagModel)
+    tags = models.ManyToManyField(TagModel)
     created_at = models.DateTimeField(auto_now_add=True)
     pub_date = models.DateTimeField(default=timezone.now)
     is_published = models.BooleanField(default=True)

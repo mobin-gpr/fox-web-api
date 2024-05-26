@@ -11,7 +11,7 @@ now = timezone.now()
 # region - List Of Articles
 
 class ArticleListAPIView(ListAPIView):
-    queryset = ArticleModel.objects.filter(is_published=True, pub_date__lt=now).order_by('-pub_date')
+    queryset = ArticleModel.objects.filter(is_published=True, pub_date__lte=now).order_by('-pub_date')
     serializer_class = ArticleSerializer
     lookup_field = 'slug'
 
@@ -21,7 +21,7 @@ class ArticleListAPIView(ListAPIView):
 # region - Detail of Articles
 
 class ArticleDetailAPIView(RetrieveAPIView):
-    queryset = ArticleModel.objects.filter(is_published=True, pub_date__lt=now).order_by('-pub_date')
+    queryset = ArticleModel.objects.filter(is_published=True, pub_date__lte=now).order_by('-pub_date')
     serializer_class = ArticleSerializer
     lookup_field = 'slug'
 
@@ -43,7 +43,7 @@ class ArticleReactionsAPIView(APIView):
     serializer_class = ArticleReactionSerializer
 
     def post(self, request):
-        serializer = ArticleReactionSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
             # It takes the necessary values to record the user's reaction from the front-end developer
@@ -101,5 +101,31 @@ class ArticleReactionsAPIView(APIView):
                 return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# endregion
+
+# region Flter Articles By Tag
+
+class FilterArticleByTagAPIView(ListAPIView):
+    queryset = ArticleModel.objects
+    serializer_class = ArticleSerializer
+
+    def get(self, request, *args, **kwargs):
+        slug = self.kwargs.get('slug')
+        articles = self.queryset.filter(slug=slug, pub_date__lte=now, is_published=True).order_by('-pub_date')
+        return super().get(request, *args, **kwargs)
+
+# endregion
+
+
+class FilterArticleByAuthorAPIView(ListAPIView):
+    queryset = ArticleModel.objects
+    serializer_class = ArticleSerializer
+
+    def get(self, request, *args, **kwargs):
+        username = self.kwargs.get('username')
+        articles = self.queryset.filter(author__username=username, pub_date__lte=now, is_published=True).order_by('-pub_date')
+        return super().get(request, *args, **kwargs)
 
 # endregion
