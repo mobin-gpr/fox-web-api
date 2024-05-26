@@ -116,6 +116,7 @@ class FilterArticleByTagAPIView(ListAPIView):
         articles = self.queryset.filter(slug=slug, pub_date__lte=now, is_published=True).order_by('-pub_date')
         return super().get(request, *args, **kwargs)
 
+
 # endregion
 
 
@@ -125,7 +126,8 @@ class FilterArticleByAuthorAPIView(ListAPIView):
 
     def get(self, request, *args, **kwargs):
         username = self.kwargs.get('username')
-        articles = self.queryset.filter(author__username=username, pub_date__lte=now, is_published=True).order_by('-pub_date')
+        articles = self.queryset.filter(author__username=username, pub_date__lte=now, is_published=True).order_by(
+            '-pub_date')
         return super().get(request, *args, **kwargs)
 
 # endregion
