@@ -1,19 +1,73 @@
+from pip._vendor.rich.markup import Tag
 from rest_framework import serializers
 from articles_app.models import *
 from django.urls import reverse
+from users_app.models import User
+from utils.text_editor import snippet
 
 
-# region - Serializer Of Article
+# region - Serializer Of Authors
+
+class AuthorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username']
+
+
+# endregion
+
+
+# region - Serializer Of Tags
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TagModel
+        fields = ['id', 'name', 'slug']
+
+        # endregion
+
+        # region - Serializer Of Article
+
+
 class ArticleSerializer(serializers.ModelSerializer):
     reactions = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
     views = serializers.SerializerMethodField()
-    tags = serializers.SerializerMethodField()
-    author = serializers.SerializerMethodField()
+    content_summary = serializers.SerializerMethodField()
 
     class Meta:
         model = ArticleModel
-        fields = '__all__'
+        fields = ['id', 'title', 'author', 'tags', 'meta_description', 'content', 'content_summary', 'slug', 'image',
+                  'reactions', 'views', 'url', 'created_at', 'pub_date']
+
+    def to_representation(self, instance):
+        """
+        Separating the display mode of the fields from the manipulation mode of the fields
+        """
+        rep = super().to_representation(instance)
+        request = self.context.get('request')
+        ################### tags ####################
+
+        tags = TagSerializer(instance.tags.filter(is_active=True), many=True).data
+        custom_tags = []
+        for tag in tags:
+            tag['url'] = request.build_absolute_uri(reverse('filter-article-by-tags', kwargs={'slug': tag['slug']}))
+            del tag['slug']
+            custom_tags.append(tag)
+        rep['tags'] = custom_tags
+
+        ################### end tags ####################
+
+        ################### author ####################
+
+        author = AuthorSerializer(instance.author, many=False).data
+        author['url'] = request.build_absolute_uri(
+            reverse('filter-article-by-author', kwargs={'username': author['username']}))
+        rep['author'] = author
+
+        ################### end author ####################
+
+        return rep
 
     def get_url(self, obj):
         """
@@ -43,49 +97,13 @@ class ArticleSerializer(serializers.ModelSerializer):
         view_count = ArticleVisitModel.objects.filter(article_id=obj.id).count()
         return view_count
 
-    def get_tags(self, obj):
+    def get_content_summary(self, obj):
         """
-        Override the value of tags to return more useful information instead of ID
+        Returns the content summary of the article
         """
-        ################### FORMAT ONE ###################
+        summary = snippet(obj.content, 20)
+        return summary
 
-        # tags = {}
-        # filter_tags = obj.tags.filter(is_active=True)
-        # for i, tag in enumerate(filter_tags, start=1):
-        #     tags[i] = {}
-        #     tags[i]['name'] = tag.name
-        #     tags[i]['url'] = reverse('filter-article-by-tags', kwargs={'slug': tag.slug})
-        # return tags
-
-        ################### END FORMAT ONE ###################
-
-
-        ################### FORMAT TWO ###################
-        request = self.context.get('request')
-        tags = []
-        filter_tags = obj.tags.filter(is_active=True)
-        for tag in filter_tags:
-            values = {
-                'name': tag.name,
-                'url': request.build_absolute_uri(tag.get_absolute_url()),
-            }
-            tags.append(values)
-        return tags
-
-        ################### END FORMAT TWO ###################
-    def get_author(self, obj):
-        """
-        Override the value of author to return more useful information instead of ID
-        """
-        request = self.context.get('request')
-        author = {}
-        # Checks if the author has set the first name and last name, returns it in the author's profile
-        if full_name:=obj.author.get_full_name():
-            author['full_name'] = full_name
-        username = obj.author.username
-        author['username'] = username
-        author['url'] = request.build_absolute_uri(reverse('filter-article-by-author', kwargs={'username': username}))
-        return author
 
 # endregion
 
