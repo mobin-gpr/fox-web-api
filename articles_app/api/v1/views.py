@@ -113,29 +113,3 @@ class ArticleReactionsAPIView(APIView):
 
 # endregion
 
-# # region Flter Articles By Tag
-#
-# class FilterArticleByTagAPIView(ListAPIView):
-#     queryset = ArticleModel.objects
-#     serializer_class = ArticleSerializer
-#
-#     def get(self, request, *args, **kwargs):
-#         slug = self.kwargs.get('slug')
-#         articles = self.queryset.filter(slug=slug, pub_date__lte=now, is_published=True).order_by('-pub_date')
-#         return super().get(request, *args, **kwargs)
-#
-#
-# # endregion
-#
-#
-# class FilterArticleByAuthorAPIView(ListAPIView):
-#     queryset = ArticleModel.objects
-#     serializer_class = ArticleSerializer
-#
-#     def get(self, request, *args, **kwargs):
-#         username = self.kwargs.get('username')
-#         articles = self.queryset.filter(author__username=username, pub_date__lte=now, is_published=True).order_by(
-#             '-pub_date')
-#         return super().get(request, *args, **kwargs)
-#
-# # endregion
