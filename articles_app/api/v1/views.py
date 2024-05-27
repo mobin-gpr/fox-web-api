@@ -123,10 +123,13 @@ class ArticleReactionsAPIView(APIView):
 # endregion
 
 
-# class TagsListAPIView(ListAPIView):
-#     queryset = TagModel.objects.filter(is_active=True)
-#     serializer_class = TagSerializer
-#     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-#     filterset_fields = {'name': ['exact', 'in']}
-#     search_fields = ['name']
-#     pagination_class = DefaultPagination
+class TagsListAPIView(ListAPIView):
+    """
+    This view is for getting all tags
+    """
+    queryset = TagModel.objects.filter(is_active=True)
+    serializer_class = TagSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = {'name': ['exact', 'in']}
+    search_fields = ['name']
+    pagination_class = DefaultPagination
