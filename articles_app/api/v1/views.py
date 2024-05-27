@@ -14,11 +14,14 @@ now = timezone.now()
 # region - List Of Articles
 
 class ArticleListAPIView(ListAPIView):
+    """
+    This view is for getting all articles
+    """
     queryset = ArticleModel.objects.filter(is_published=True, pub_date__lte=now).order_by('-pub_date')
     serializer_class = ArticleSerializer
     lookup_field = 'slug'
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['tags', 'author']
+    filterset_fields = {'tags': ['exact', 'in'], 'author': ['exact', 'in']}
     search_fields = ['title', 'content']
     ordering_fields = ['pub_date', 'created_at']
     pagination_class = DefaultPagination
@@ -29,6 +32,9 @@ class ArticleListAPIView(ListAPIView):
 # region - Detail of Articles
 
 class ArticleDetailAPIView(RetrieveAPIView):
+    """
+    This view is for getting a single article
+    """
     queryset = ArticleModel.objects.filter(is_published=True, pub_date__lte=now).order_by('-pub_date')
     serializer_class = ArticleSerializer
     lookup_field = 'slug'
@@ -48,6 +54,9 @@ class ArticleDetailAPIView(RetrieveAPIView):
 # region - Handle The Article Likes & Dislikes Reactions
 
 class ArticleReactionsAPIView(APIView):
+    """
+    This view is for handling articles reactions
+    """
     serializer_class = ArticleReactionSerializer
 
     def post(self, request):
@@ -113,3 +122,11 @@ class ArticleReactionsAPIView(APIView):
 
 # endregion
 
+
+# class TagsListAPIView(ListAPIView):
+#     queryset = TagModel.objects.filter(is_active=True)
+#     serializer_class = TagSerializer
+#     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+#     filterset_fields = {'name': ['exact', 'in']}
+#     search_fields = ['name']
+#     pagination_class = DefaultPagination
