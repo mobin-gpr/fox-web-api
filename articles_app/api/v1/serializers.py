@@ -11,7 +11,7 @@ from utils.text_editor import snippet
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username']
+        fields = ['id', 'username']
 
 
 # endregion
@@ -46,26 +46,35 @@ class ArticleSerializer(serializers.ModelSerializer):
         """
         rep = super().to_representation(instance)
         request = self.context.get('request')
-        ################### tags ####################
 
-        tags = TagSerializer(instance.tags.filter(is_active=True), many=True).data
+        ############## Separation of fields in the list and details page ###############
+
+        if request.parser_context['kwargs'].get('slug'):
+            rep.pop('url')
+            rep.pop('content_summary')
+            rep.pop('slug')
+        else:
+            rep.pop('content')
+
+        ################### end eparation of fields in the list and details page ####################
+
+        ################### Tags ####################
+
+        tags = TagSerializer(instance.tags.filter(is_active=True), many=True, context={'request': request}).data
         custom_tags = []
         for tag in tags:
-            tag['url'] = request.build_absolute_uri(reverse('filter-article-by-tags', kwargs={'slug': tag['slug']}))
-            del tag['slug']
+            tag.pop('slug', None)
             custom_tags.append(tag)
         rep['tags'] = custom_tags
 
-        ################### end tags ####################
+        ################### End tags ####################
 
-        ################### author ####################
+        ################### Author ####################
 
-        author = AuthorSerializer(instance.author, many=False).data
-        author['url'] = request.build_absolute_uri(
-            reverse('filter-article-by-author', kwargs={'username': author['username']}))
+        author = AuthorSerializer(instance.author, many=False, context={'request': request}).data
         rep['author'] = author
 
-        ################### end author ####################
+        ################### End author ####################
 
         return rep
 

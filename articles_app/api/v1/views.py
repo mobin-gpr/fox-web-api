@@ -4,6 +4,9 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from utils.network_services import get_ip
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
+from ...paginattion import DefaultPagination
 
 now = timezone.now()
 
@@ -14,6 +17,11 @@ class ArticleListAPIView(ListAPIView):
     queryset = ArticleModel.objects.filter(is_published=True, pub_date__lte=now).order_by('-pub_date')
     serializer_class = ArticleSerializer
     lookup_field = 'slug'
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['tags', 'author']
+    search_fields = ['title', 'content']
+    ordering_fields = ['pub_date', 'created_at']
+    pagination_class = DefaultPagination
 
 
 # endregion
@@ -105,29 +113,29 @@ class ArticleReactionsAPIView(APIView):
 
 # endregion
 
-# region Flter Articles By Tag
-
-class FilterArticleByTagAPIView(ListAPIView):
-    queryset = ArticleModel.objects
-    serializer_class = ArticleSerializer
-
-    def get(self, request, *args, **kwargs):
-        slug = self.kwargs.get('slug')
-        articles = self.queryset.filter(slug=slug, pub_date__lte=now, is_published=True).order_by('-pub_date')
-        return super().get(request, *args, **kwargs)
-
-
-# endregion
-
-
-class FilterArticleByAuthorAPIView(ListAPIView):
-    queryset = ArticleModel.objects
-    serializer_class = ArticleSerializer
-
-    def get(self, request, *args, **kwargs):
-        username = self.kwargs.get('username')
-        articles = self.queryset.filter(author__username=username, pub_date__lte=now, is_published=True).order_by(
-            '-pub_date')
-        return super().get(request, *args, **kwargs)
-
-# endregion
+# # region Flter Articles By Tag
+#
+# class FilterArticleByTagAPIView(ListAPIView):
+#     queryset = ArticleModel.objects
+#     serializer_class = ArticleSerializer
+#
+#     def get(self, request, *args, **kwargs):
+#         slug = self.kwargs.get('slug')
+#         articles = self.queryset.filter(slug=slug, pub_date__lte=now, is_published=True).order_by('-pub_date')
+#         return super().get(request, *args, **kwargs)
+#
+#
+# # endregion
+#
+#
+# class FilterArticleByAuthorAPIView(ListAPIView):
+#     queryset = ArticleModel.objects
+#     serializer_class = ArticleSerializer
+#
+#     def get(self, request, *args, **kwargs):
+#         username = self.kwargs.get('username')
+#         articles = self.queryset.filter(author__username=username, pub_date__lte=now, is_published=True).order_by(
+#             '-pub_date')
+#         return super().get(request, *args, **kwargs)
+#
+# # endregion

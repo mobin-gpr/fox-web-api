@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_ckeditor_5',
     'corsheaders',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -238,3 +239,4 @@ CORS_ORIGIN_WHITELIST = [
     'http://localhost:8000',  # Add your development server domain
     'http://localhost:3000', # Add your Next.js Development server domain
 ]
+
