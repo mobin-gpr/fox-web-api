@@ -19,7 +19,8 @@ class ArticleSerializer(serializers.ModelSerializer):
         """
         return articles absolute url
         """
-        return reverse('article-detail', kwargs={'slug': obj.slug})
+        request = self.context.get('request')
+        return request.build_absolute_uri(obj.get_absolute_url())
 
     def get_reactions(self, obj):
         """
@@ -60,13 +61,13 @@ class ArticleSerializer(serializers.ModelSerializer):
 
 
         ################### FORMAT TWO ###################
-
+        request = self.context.get('request')
         tags = []
         filter_tags = obj.tags.filter(is_active=True)
         for tag in filter_tags:
             values = {
                 'name': tag.name,
-                'url': reverse('filter-article-by-tags', kwargs={'slug': tag.slug})
+                'url': request.build_absolute_uri(tag.get_absolute_url()),
             }
             tags.append(values)
         return tags
@@ -76,13 +77,14 @@ class ArticleSerializer(serializers.ModelSerializer):
         """
         Override the value of author to return more useful information instead of ID
         """
+        request = self.context.get('request')
         author = {}
         # Checks if the author has set the first name and last name, returns it in the author's profile
         if full_name:=obj.author.get_full_name():
             author['full_name'] = full_name
         username = obj.author.username
         author['username'] = username
-        author['url'] = reverse('filter-article-by-author', kwargs={'username': username})
+        author['url'] = request.build_absolute_uri(reverse('filter-article-by-author', kwargs={'username': username}))
         return author
 
 # endregion

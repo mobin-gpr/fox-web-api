@@ -2,8 +2,10 @@ from django.db import models
 from django.utils import timezone
 from django_ckeditor_5.fields import CKEditor5Field
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 User = get_user_model()
+
 
 # region - Model Of Article tag
 
@@ -14,6 +16,10 @@ class TagModel(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('filter-article-by-tags', kwargs={'slug': self.slug})
+
 
 # endregion
 
@@ -35,6 +41,10 @@ class ArticleModel(models.Model):
     def __str__(self):
         return self.title
 
+    def get_absolute_url(self):
+        return reverse('article-detail', kwargs={'slug': self.slug})
+
+
 # endregion
 
 
@@ -47,6 +57,7 @@ class ArticleVisitModel(models.Model):
     def __str__(self):
         return self.article.title + self.user
 
+
 # endregion
 
 # region - Model Of Article Likes
@@ -57,6 +68,7 @@ class ArticleLikesModel(models.Model):
 
     def __str__(self):
         return self.article.title + self.user
+
 
 # endregion
 
