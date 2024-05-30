@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     'drf_yasg',
+    'rest_framework_simplejwt',
 
 ]
 
@@ -242,5 +243,11 @@ CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',  # Add your Next.js Development server domain
 ]
 
-
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+# REST configs
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}

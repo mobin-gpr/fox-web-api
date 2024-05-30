@@ -6,12 +6,14 @@ django-cors-headers==4.3.1
 django-filter==24.2
 django-js-asset==2.2.0
 djangorestframework==3.15.1
+djangorestframework-simplejwt==5.3.1
 drf-yasg==1.21.7
 inflection==0.5.1
 jsonschema==4.22.0
 jsonschema-specifications==2023.12.1
 packaging==24.0
 pillow==10.3.0
+PyJWT==2.8.0
 python-decouple==3.8
 pytz==2024.1
 PyYAML==6.0.1
