@@ -1,6 +1,5 @@
 from django.core.mail import EmailMessage
 from django.urls import reverse
-from drf_yasg.openapi import Response
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
