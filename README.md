@@ -36,8 +36,10 @@ Start the server
   python3 manage.py runserver
 ```
 
+## Front end 
+
+- [fox-web](https://github.com/Mhyar-nsi/fox-web.git)
 
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
-
