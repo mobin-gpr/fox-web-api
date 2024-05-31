@@ -1,12 +1,12 @@
 from rest_framework import permissions
-from rest_framework.generics import CreateAPIView, UpdateAPIView
+from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from .serializers import RegisterSerializer, ResendEmailVerificationSerializer, ChangePasswordSerializer, \
-    ResetPasswordSerializer, SetPasswordSerializer
+    ResetPasswordSerializer, SetPasswordSerializer, ProfileSerializer
 from django.shortcuts import get_object_or_404
 from utils.jwt_token import token_decoder
 from django.urls import reverse
@@ -179,5 +179,22 @@ class SetPasswordAPIView(APIView):
             return Response({'message': 'Your password has been changed successfully!'}, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# endregion
+
+# region - Profile API View
+
+class ProfileAPIView(RetrieveAPIView):
+    """User profile view"""
+    permission_classes = [
+        permissions.IsAuthenticated
+    ]
+    serializer_class = ProfileSerializer
+
+    # definition of get_object due to not using lookup_field
+    def get_object(self):
+        return self.request.user
+    def get_queryset(self):
+        return get_object_or_404(User, id=self.get_object().id)
 
 # endregion

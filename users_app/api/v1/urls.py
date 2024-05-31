@@ -8,4 +8,5 @@ urlpatterns = [
     path('change_password/', ChangePasswordAPIView.as_view(), name='change_password'),  # Change user password endpoint
     path('reset_password/', ResetPasswordAPIView.as_view(), name='reset_password'),  # Reset user password endpoint
     path('set_password/<str:token>', SetPasswordAPIView.as_view(), name='set_password'),  # Set user password after reset password endpoint
+    path('profile/', ProfileAPIView.as_view(), name='profile'),  # User profile endpoint
 ]

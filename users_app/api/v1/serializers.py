@@ -106,6 +106,7 @@ class ChangePasswordSerializer(serializers.Serializer):
 
         return super().validate(attrs)
 
+
 # endregion
 
 # region - Reset Password Serializer
@@ -113,6 +114,7 @@ class ChangePasswordSerializer(serializers.Serializer):
 class ResetPasswordSerializer(serializers.Serializer):
     """Reset user password"""
     email = serializers.EmailField(required=True)
+
 
 # endregion
 
@@ -137,5 +139,18 @@ class SetPasswordSerializer(serializers.Serializer):
             raise serializers.ValidationError()
 
         return super().validate(attrs)
+
+
+# endregion
+
+# region - Profile Serializer
+
+class ProfileSerializer(serializers.ModelSerializer):
+    """User profile serializer"""
+    class Meta:
+        model = User
+        fields = (
+        'id', 'email', 'first_name', 'last_name', 'date_joined', 'last_login', 'is_active', 'is_staff', 'is_superuser'
+        )
 
 # endregion
