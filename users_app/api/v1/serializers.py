@@ -28,6 +28,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         try:
             # validate password complexity
             validate_password(password)
+        # password is not strong
         except serializers.ValidationError:
             raise serializers.ValidationError()
         return attrs
@@ -79,5 +80,30 @@ class ResendEmailVerificationSerializer(serializers.Serializer):
         attrs['user'] = user
         return super().validate(attrs)
 
+
+# endregion
+
+# region - Change Password Serializer
+class ChangePasswordSerializer(serializers.Serializer):
+    """This serializer change user password"""
+    old_password = serializers.CharField(required=True, write_only=True)
+    new_password = serializers.CharField(required=True, write_only=True)
+    confirm_new_password = serializers.CharField(required=True, write_only=True)
+
+    def validate(self, attrs):
+        new_password = attrs.get('new_password')
+        confirm_new_password = attrs.get('confirm_new_password')
+        # New password & confirm new password are not match
+        if new_password != confirm_new_password:
+            raise serializers.ValidationError({'error': 'The passwords do not match'})
+
+        # validate password complexity
+        try:
+            validate_password(new_password)
+        # password is not strong
+        except serializers.ValidationError:
+            raise serializers.ValidationError()
+
+        return super().validate(attrs)
 
 # endregion

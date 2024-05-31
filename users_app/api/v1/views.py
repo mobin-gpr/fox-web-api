@@ -1,17 +1,18 @@
 from rest_framework import permissions
-from rest_framework.generics import CreateAPIView, RetrieveAPIView
+from rest_framework.generics import CreateAPIView, UpdateAPIView
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
-from .serializers import RegisterSerializer, ResendEmailVerificationSerializer
+from .serializers import RegisterSerializer, ResendEmailVerificationSerializer, ChangePasswordSerializer
 from django.shortcuts import get_object_or_404
 from utils.jwt_token import token_decoder
 from django.urls import reverse
 from django.core.mail import EmailMessage
 from utils.email import EmailThread
 from utils.jwt_token import token_generator
+from django.contrib.auth.password_validation import validate_password
 
 # Get the user from active model
 User = get_user_model()
@@ -75,3 +76,29 @@ class ResendEmailVerificationAPIView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # endregion
+
+
+class ChangePasswordAPIView(APIView):
+    permission_classes = [
+        permissions.IsAuthenticated
+    ]
+    serializer_class = ChangePasswordSerializer
+
+    def put(self, request, *args, **kwargs):
+        serializer = ChangePasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            # Get current user
+            user: User = User.objects.get(id=self.request.user.id)
+            old_password = serializer.validated_data['old_password']
+            new_password = serializer.validated_data['new_password']
+            # Old password is correct
+            if user.check_password(old_password):
+                user.set_password(new_password)
+                user.save()
+                return Response({'message': 'Your password has been changed successfully!'}, status=status.HTTP_200_OK)
+            # Old password is not correct
+            else:
+                return Response({'error': 'Your old password is not correct'})
+        # Serializer is not valid
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
