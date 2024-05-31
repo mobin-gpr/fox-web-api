@@ -44,19 +44,14 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    # Admin panel url
-    path('admin/', admin.site.urls),
-    # Ckeditor url
-    path("ckeditor5/", include('django_ckeditor_5.urls')),
-    # Article application urls
-    path('articles/api/v1/', include('articles_app.api.v1.urls')),
-    # User application urls
-    path('accounts/api/v1/', include('users_app.api.v1.urls')),
+    path('admin/', admin.site.urls),  # Admin panel url
+    path("ckeditor5/", include('django_ckeditor_5.urls')),  # Ckeditor url
+    path('articles/api/v1/', include('articles_app.api.v1.urls')),  # Article application urls
+    path('accounts/api/v1/', include('users_app.api.v1.urls')),  # User application urls
     # Documentation urls
-    path('swagger/output.json', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    # Download swagger output as .json file
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path('swagger/output.json', schema_view.without_ui(cache_timeout=0), name='schema-json'), # Download swagger output as .json file
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'), # Swagger endpoint
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'), # Redoc endpoint
     # JWT endpoints
     path('jwt/token/', TokenObtainPairView.as_view(), name='get_token'),
     path('jwt/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
