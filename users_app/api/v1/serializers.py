@@ -26,6 +26,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             raise error
         # Check password complexity
         try:
+            # validate password complexity
             validate_password(password)
         except serializers.ValidationError:
             raise serializers.ValidationError()
