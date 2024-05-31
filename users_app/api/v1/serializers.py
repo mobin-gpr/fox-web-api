@@ -93,7 +93,39 @@ class ChangePasswordSerializer(serializers.Serializer):
     def validate(self, attrs):
         new_password = attrs.get('new_password')
         confirm_new_password = attrs.get('confirm_new_password')
-        # New password & confirm new password are not match
+        # If new password & confirm new password are not match
+        if new_password != confirm_new_password:
+            raise serializers.ValidationError({'error': 'The passwords do not match'})
+
+        # validate password complexity
+        try:
+            validate_password(new_password)
+        # password is not strong
+        except serializers.ValidationError:
+            raise serializers.ValidationError()
+
+        return super().validate(attrs)
+
+# endregion
+
+# region - Reset Password Serializer
+
+class ResetPasswordSerializer(serializers.Serializer):
+    """Reset user password"""
+    email = serializers.EmailField(required=True)
+
+# endregion
+
+# region - Set Password Serializer
+class SetPasswordSerializer(serializers.Serializer):
+    """Set user password after reset password"""
+    new_password = serializers.CharField(required=True, write_only=True)
+    confirm_new_password = serializers.CharField(required=True, write_only=True)
+
+    def validate(self, attrs):
+        new_password = attrs.get('new_password')
+        confirm_new_password = attrs.get('confirm_new_password')
+        # If new password & confirm new password are not match
         if new_password != confirm_new_password:
             raise serializers.ValidationError({'error': 'The passwords do not match'})
 

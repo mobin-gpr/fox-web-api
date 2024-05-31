@@ -5,7 +5,8 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
-from .serializers import RegisterSerializer, ResendEmailVerificationSerializer, ChangePasswordSerializer
+from .serializers import RegisterSerializer, ResendEmailVerificationSerializer, ChangePasswordSerializer, \
+    ResetPasswordSerializer, SetPasswordSerializer
 from django.shortcuts import get_object_or_404
 from utils.jwt_token import token_decoder
 from django.urls import reverse
@@ -17,6 +18,7 @@ from django.contrib.auth.password_validation import validate_password
 # Get the user from active model
 User = get_user_model()
 
+
 # region - Resgister API View
 class RegisterAPIView(CreateAPIView):
     """Register a new user"""
@@ -26,11 +28,13 @@ class RegisterAPIView(CreateAPIView):
     ]
     serializer_class = RegisterSerializer
 
+
 # endregion
 
 # region - Confirm Email API View
 class EmailVerificationAPIView(APIView):
     """Confirm users email"""
+
     def get(self, request, token):
         # Decode the token to get the user id
         user_id = token_decoder(token)
@@ -48,6 +52,7 @@ class EmailVerificationAPIView(APIView):
         except TypeError:
             return Response(user_id)
 
+
 # endregion
 
 
@@ -58,27 +63,33 @@ class ResendEmailVerificationAPIView(APIView):
         permissions.AllowAny
     ]
     serializer_class = ResendEmailVerificationSerializer
+
     def post(self, request):
         serializer = ResendEmailVerificationSerializer(data=request.data)
         if serializer.is_valid():
             # Get user from serilizer validate method
             user = serializer.validated_data['user']
-            # Generate a jwt token for confirm email
+            # Generate a jwt token for resend confirm email
             token = token_generator(user)
-            # Sending confirm email token
+            # Resending confirm email token
             confirm_url = self.request.build_absolute_uri(reverse('confirm_email', kwargs={'token': token['access']}))
             msg = f'for confirm email click on: {confirm_url}'
             email_obj = EmailMessage('Confirm email', msg, to=[user.email])
             # Sending email with threading
             EmailThread(email_obj).start()
-            return Response({'message: The activation email has been sent again successfully'}, status=status.HTTP_200_OK)
+            return Response({'message: The activation email has been sent again successfully'},
+                            status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 # endregion
 
 
+# region - Change Password API View
+
 class ChangePasswordAPIView(APIView):
+    """Change user password"""
     permission_classes = [
         permissions.IsAuthenticated
     ]
@@ -102,3 +113,71 @@ class ChangePasswordAPIView(APIView):
         # Serializer is not valid
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# endregion
+
+# region - Reset Password API View
+
+class ResetPasswordAPIView(APIView):
+    """Reset user password"""
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    serializer_class = ResetPasswordSerializer
+
+    def post(self, request):
+        serializer = ResetPasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            try:
+                user: User = User.objects.get(email=email)
+            except User.DoesNotExist:
+                return Response({'error': 'User does not exist!'}, status=status.HTTP_400_BAD_REQUEST)
+            # Generate a jwt token for reset password
+            token = token_generator(user)
+            # Sending reset password email token
+            set_password_url = self.request.build_absolute_uri(
+                reverse('set_password', kwargs={'token': token['access']}))
+            msg = f'for reset password click on: {set_password_url}'
+            email_obj = EmailMessage('Set password', msg, to=[user.email])
+            # Sending email with threading
+            EmailThread(email_obj).start()
+            return Response({'message: Reset password email has been sent!'},
+                            status=status.HTTP_200_OK)
+
+        return Response('')
+
+
+# endregion
+
+# region - Set Password API View
+class SetPasswordAPIView(APIView):
+    """Set user password"""
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    serializer_class = SetPasswordSerializer
+
+    def post(self, request, token):
+        serializer = SetPasswordSerializer(data=request.data)
+        # Decode the token to get the user id
+        user_id = token_decoder(token)
+
+        try:
+            user = get_object_or_404(User, pk=user_id)
+        except Http404:
+            return Response({'error': 'Activation link is invalid!'}, status=status.HTTP_400_BAD_REQUEST)
+        # Token is not valid or expired
+        except TypeError:
+            return Response(user_id)
+
+        if serializer.is_valid():
+            new_password = serializer.validated_data['new_password']
+            user.set_password(new_password)
+            user.save()
+            return Response({'message': 'Your password has been changed successfully!'}, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# endregion
