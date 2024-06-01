@@ -13,5 +13,3 @@ exclude =
     .venv,
 ignore =
     E501,
-    F405,
-    F403

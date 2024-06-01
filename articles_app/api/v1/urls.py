@@ -1,5 +1,10 @@
 from django.urls import path
-from articles_app.api.v1.views import *
+from articles_app.api.v1.views import (
+    ArticleListAPIView,
+    ArticleReactionsAPIView,
+    ArticleDetailAPIView,
+    TagsListAPIView,
+)
 
 urlpatterns = [
     path("", ArticleListAPIView.as_view()),  # Articles lists

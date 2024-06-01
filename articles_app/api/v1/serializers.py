@@ -1,5 +1,11 @@
 from rest_framework import serializers
-from articles_app.models import *
+from articles_app.models import (
+    ArticleModel,
+    TagModel,
+    ArticleLikesModel,
+    ArticleDisLikesModel,
+    ArticleVisitModel,
+)
 from users_app.models import User
 from utils.text_editor import snippet
 

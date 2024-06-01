@@ -1,5 +1,13 @@
 from django.urls import path
-from .views import *
+from .views import (
+    RegisterAPIView,
+    EmailVerificationAPIView,
+    ResendEmailVerificationAPIView,
+    ChangePasswordAPIView,
+    ResetPasswordAPIView,
+    SetPasswordAPIView,
+    ProfileAPIView,
+)
 
 urlpatterns = [
     path(
