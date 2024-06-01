@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-from django_ckeditor_5.fields import CKEditor5Field
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
