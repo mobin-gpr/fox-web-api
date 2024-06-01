@@ -5,8 +5,6 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
-from .serializers import RegisterSerializer, ResendEmailVerificationSerializer, ChangePasswordSerializer, \
-    ResetPasswordSerializer, SetPasswordSerializer, ProfileSerializer
 from django.shortcuts import get_object_or_404
 from utils.jwt_token import token_decoder
 from django.urls import reverse
@@ -14,7 +12,8 @@ from django.core.mail import EmailMessage
 from utils.email import EmailThread
 from utils.jwt_token import token_generator
 from django.contrib.auth.password_validation import validate_password
-
+from .serializers import RegisterSerializer, ResendEmailVerificationSerializer, ChangePasswordSerializer, \
+    ResetPasswordSerializer, SetPasswordSerializer, ProfileSerializer
 # Get the user from active model
 User = get_user_model()
 
