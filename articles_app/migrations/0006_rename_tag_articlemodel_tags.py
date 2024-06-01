@@ -6,13 +6,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('articles_app', '0005_rename_seo_description_articlemodel_meta_description_and_more'),
+        (
+            "articles_app",
+            "0005_rename_seo_description_articlemodel_meta_description_and_more",
+        ),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='articlemodel',
-            old_name='tag',
-            new_name='tags',
+            model_name="articlemodel",
+            old_name="tag",
+            new_name="tags",
         ),
     ]

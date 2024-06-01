@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('articles_app', '0004_alter_articledislikesmodel_user_and_more'),
+        ("articles_app", "0004_alter_articledislikesmodel_user_and_more"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='articlemodel',
-            old_name='seo_description',
-            new_name='meta_description',
+            model_name="articlemodel",
+            old_name="seo_description",
+            new_name="meta_description",
         ),
         migrations.AlterField(
-            model_name='articlemodel',
-            name='content',
+            model_name="articlemodel",
+            name="content",
             field=models.TextField(),
         ),
     ]

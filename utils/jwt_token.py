@@ -31,10 +31,10 @@ def token_decoder(token):
     except jwt.ExpiredSignatureError:
         # Token has expired
         return {
-            'error': 'Activation link has expired!',
+            "error": "Activation link has expired!",
         }
     except jwt.InvalidTokenError:
         # Token is invalid
         return {
-            'error': 'Activation link has expired!',
+            "error": "Activation link has expired!",
         }

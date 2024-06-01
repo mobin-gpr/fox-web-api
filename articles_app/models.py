@@ -9,6 +9,7 @@ User = get_user_model()
 
 # region - Model Of Article tag
 
+
 class TagModel(models.Model):
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=400, unique=True)
@@ -18,12 +19,13 @@ class TagModel(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('filter-article-by-tags', kwargs={'slug': self.slug})
+        return reverse("filter-article-by-tags", kwargs={"slug": self.slug})
 
 
 # endregion
 
 # region - Model Of Article
+
 
 class ArticleModel(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -32,7 +34,7 @@ class ArticleModel(models.Model):
     # content = CKEditor5Field(config_name='extends')
     content = models.TextField()
     slug = models.SlugField(max_length=400, unique=True)
-    image = models.ImageField(upload_to='images/articles/')
+    image = models.ImageField(upload_to="images/articles/")
     tags = models.ManyToManyField(TagModel)
     created_at = models.DateTimeField(auto_now_add=True)
     pub_date = models.DateTimeField(default=timezone.now)
@@ -42,13 +44,14 @@ class ArticleModel(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('article-detail', kwargs={'slug': self.slug})
+        return reverse("article-detail", kwargs={"slug": self.slug})
 
 
 # endregion
 
 
 # region - Model Of Article Visits
+
 
 class ArticleVisitModel(models.Model):
     article = models.ForeignKey(ArticleModel, on_delete=models.CASCADE)
@@ -62,6 +65,7 @@ class ArticleVisitModel(models.Model):
 
 # region - Model Of Article Likes
 
+
 class ArticleLikesModel(models.Model):
     article = models.ForeignKey(ArticleModel, on_delete=models.CASCADE)
     user = models.CharField(max_length=100)
@@ -74,11 +78,13 @@ class ArticleLikesModel(models.Model):
 
 # region - Model Of Article Dislikes
 
+
 class ArticleDisLikesModel(models.Model):
     article = models.ForeignKey(ArticleModel, on_delete=models.CASCADE)
     user = models.CharField(max_length=100)
 
     def __str__(self):
         return self.article.title + self.user
+
 
 # endregion

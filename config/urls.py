@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
@@ -25,15 +26,14 @@ from drf_yasg import openapi
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
-    TokenVerifyView
-
+    TokenVerifyView,
 )
 
 # API documenting cinfigs
 schema_view = get_schema_view(
     openapi.Info(
         title="FoxWeb API",
-        default_version='v1',
+        default_version="v1",
         description="This is a FoxWeb api",
         terms_of_service="https://www.google.com/policies/terms/",
         contact=openapi.Contact(email="mobin.ghanbarpour@yahoo.com"),
@@ -44,18 +44,34 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('admin/', admin.site.urls),  # Admin panel url
-    path("ckeditor5/", include('django_ckeditor_5.urls')),  # Ckeditor url
-    path('articles/api/v1/', include('articles_app.api.v1.urls')),  # Article application urls
-    path('accounts/api/v1/', include('users_app.api.v1.urls')),  # User application urls
+    path("admin/", admin.site.urls),  # Admin panel url
+    path("ckeditor5/", include("django_ckeditor_5.urls")),  # Ckeditor url
+    path(
+        "articles/api/v1/", include("articles_app.api.v1.urls")
+    ),  # Article application urls
+    path("accounts/api/v1/", include("users_app.api.v1.urls")),  # User application urls
     # Documentation urls
-    path('swagger/output.json', schema_view.without_ui(cache_timeout=0), name='schema-json'), # Download swagger output as .json file
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'), # Swagger endpoint
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'), # Redoc endpoint
+    path(
+        "swagger/output.json",
+        schema_view.without_ui(cache_timeout=0),
+        name="schema-json",
+    ),  # Download swagger output as .json file
+    path(
+        "swagger/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),  # Swagger endpoint
+    path(
+        "redoc/",
+        schema_view.with_ui("redoc", cache_timeout=0),
+        name="schema-redoc",
+    ),  # Redoc endpoint
     # JWT endpoints
-    path('jwt/token/', TokenObtainPairView.as_view(), name='get_token'),
-    path('jwt/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('jwt/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path("jwt/token/", TokenObtainPairView.as_view(), name="get_token"),
+    path("jwt/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("jwt/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
 ]
 
-urlpatterns += urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += urlpatterns + static(
+    settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
+)
