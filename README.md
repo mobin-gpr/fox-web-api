@@ -1,13 +1,13 @@
 
 # FoxWeb
 
-FoxWeb is a free and open source website whose main focus is on digital currency. Django REST API technology is used in the back end of this site and Next.js is used in the front end. This project is still under development. After completion, additional information about this project will be announced.
+FoxWeb is a free and open source website whose main focus is on digital currency. Django REST API technology is used in the back-end of this site and Next.js is used in the front-end. This project is still under development. After completion, additional information about this project will be announced.
 
 
 ## Authors
 
-- [@mobin-ghanbarpour](https://github.com/mobin-gpr/) (backend dev)
-- [@mahyar-nasiri](https://github.com/Mhyar-nsi) (front end dev)
+- [@mobin-ghanbarpour](https://github.com/mobin-gpr/) (back-end dev)
+- [@mahyar-nasiri](https://github.com/Mhyar-nsi) (front-end dev)
 
 
 ## Run Locally
