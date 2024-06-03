@@ -35,6 +35,13 @@ Start the server
 ```bash
   python3 manage.py runserver
 ```
+## Options
+
+You can create fake data by:
+
+```bash
+  python manage.py fake_data
+```
 
 ## Front end 
 
