@@ -33,7 +33,7 @@ class ArticleModel(models.Model):
     # content = CKEditor5Field(config_name='extends')
     content = models.TextField()
     slug = models.SlugField(max_length=400, unique=True)
-    image = models.ImageField(upload_to="images/articles/")
+    image = models.ImageField(upload_to="images/articles/", null=True, blank=True)
     tags = models.ManyToManyField(TagModel)
     created_at = models.DateTimeField(auto_now_add=True)
     pub_date = models.DateTimeField(default=timezone.now)
@@ -57,7 +57,7 @@ class ArticleVisitModel(models.Model):
     user = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.article.title + self.user
+        return self.article.title + "-" + self.user
 
 
 # endregion
@@ -70,7 +70,7 @@ class ArticleLikesModel(models.Model):
     user = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.article.title + self.user
+        return self.article.title + "-" + self.user
 
 
 # endregion
@@ -83,7 +83,7 @@ class ArticleDisLikesModel(models.Model):
     user = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.article.title + self.user
+        return self.article.title + "-" + self.user
 
 
 # endregion

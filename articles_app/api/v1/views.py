@@ -7,6 +7,7 @@ from articles_app.api.v1.serializers import (
     ArticleDisLikesModel,
     ArticleVisitModel,
 )
+from rest_framework import permissions
 from articles_app.models import ArticleModel, TagModel
 from rest_framework import status
 from rest_framework.response import Response
@@ -38,6 +39,7 @@ class ArticleListAPIView(ListAPIView):
     search_fields = ["title", "content"]
     ordering_fields = ["pub_date", "created_at"]
     pagination_class = DefaultPagination
+    permissions = [permissions.AllowAny]
 
 
 # endregion
@@ -55,6 +57,7 @@ class ArticleDetailAPIView(RetrieveAPIView):
     ).order_by("-pub_date")
     serializer_class = ArticleSerializer
     lookup_field = "slug"
+    permissions = [permissions.AllowAny]
 
     def get(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -79,6 +82,7 @@ class ArticleReactionsAPIView(APIView):
     """
 
     serializer_class = ArticleReactionSerializer
+    permissions = [permissions.AllowAny]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -187,3 +191,4 @@ class TagsListAPIView(ListAPIView):
     filterset_fields = {"name": ["exact", "in"]}
     search_fields = ["name"]
     pagination_class = DefaultPagination
+    permissions = [permissions.AllowAny]

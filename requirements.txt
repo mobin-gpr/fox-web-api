@@ -23,12 +23,14 @@ platformdirs==4.2.2
 pycodestyle==2.11.1
 pyflakes==3.2.0
 PyJWT==2.8.0
+python-dateutil==2.9.0.post0
 python-decouple==3.8
 pytz==2024.1
 PyYAML==6.0.1
 referencing==0.35.1
 rpds-py==0.18.1
 setuptools==69.2.0
+six==1.16.0
 sqlparse==0.5.0
 swagger-spec-validator==3.0.3
 typing_extensions==4.12.0
