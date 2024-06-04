@@ -10,6 +10,7 @@ django-js-asset==2.2.0
 djangorestframework==3.15.1
 djangorestframework-simplejwt==5.3.1
 drf-yasg==1.21.7
+Faker==25.4.0
 flake8==7.0.0
 inflection==0.5.1
 jsonschema==4.22.0
@@ -29,10 +30,8 @@ pytz==2024.1
 PyYAML==6.0.1
 referencing==0.35.1
 rpds-py==0.18.1
-setuptools==69.2.0
 six==1.16.0
 sqlparse==0.5.0
 swagger-spec-validator==3.0.3
 typing_extensions==4.12.0
 uritemplate==4.1.1
-wheel==0.43.0
