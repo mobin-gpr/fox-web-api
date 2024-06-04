@@ -329,3 +329,6 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_LIFETIME": timedelta(days=10),
     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=20),
 }
+
+# Celery settings
+CELERY_BROKER_URL = "redis://redis:6379/0"
