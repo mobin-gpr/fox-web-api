@@ -1,30 +1,57 @@
 services:
   redis:
     container_name: redis
-    image: redis
+    image: redis:7.0.15-alpine
     restart: always
     ports:
       - "6379:6379"
     command: redis-server --save 60 1 --loglevel warning
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
   django:
-    build: .
     container_name: django
-    command: python manage.py runserver 0.0.0.0:8000
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
-      - .:/app
+      - .:/app/
     ports:
       - "8000:8000"
     environment:
-      - SECRET_KEY=django-insecure-rx#$^_d#8(p!ko(e(bafn5hc8yt=fr@b3lte5^q+(36+3@ao=b
+      - SECRET_KEY=django-insecure-7to1vjz79in8m$yi$*h#fal2zkjymkkt^+&m)$6vmipm_jmxvm
+      - DEBUG=True
+      - ALLOWED_HOSTS=127.0.0.1,localhost,0.0.0.0
+    depends_on:
+      - redis
+      - rabbitmq
+
+
+  celery:
+    container_name: celery
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    command: celery --app=config worker -l INFO -Q tasks
+    volumes:
+      - .:/app/
+
+    environment:
+      - SECRET_KEY=django-insecure-7to1vjz79in8m$yi$*h#fal2zkjymkkt^+&m)$6vmipm_jmxvm
+      - DEBUG=True
+      - ALLOWED_HOSTS=127.0.0.1,localhost,0.0.0.0
     depends_on:
       - redis
 
-  worker:
-    container_name: worker
-    build: .
-    command: celery -A config worker --loglevel=info
-    volumes:
-      - .:/app
-    depends_on:
-      - redis
-      - django
+  flower:
+    image: mher/flower
+    ports:
+      - "5555:5555"
+    environment:
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672/

@@ -26,7 +26,7 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0']
+ALLOWED_HOSTS = ["0.0.0.0"]
 
 # Application definition
 
@@ -331,4 +331,6 @@ SIMPLE_JWT = {
 }
 
 # Celery settings
-CELERY_BROKER_URL = "redis://redis:6379/0"
+CELERY_BROKER_URL = config("CELERY_BROKER_URL", "amqp://guest:guest@rabbitmq:5672/")
+CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND", "redis://redis:6379/0")
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True

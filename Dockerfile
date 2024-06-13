@@ -1,14 +1,13 @@
 FROM python:3.12.3-alpine
 
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-
 WORKDIR /app
 
-COPY requirements.txt /app/
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV PATH="/PY/BIN:$PATH"
 
-RUN pip3 install --upgrade pip
-RUN pip3 install -r requirements.txt
+RUN pip install --upgrade pip
 
-COPY ./config /app/
+COPY . /app
+
+RUN pip install -r requirements.txt
