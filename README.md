@@ -15,32 +15,27 @@ FoxWeb is a free and open source website whose main focus is on digital currency
 Clone the project
 
 ```bash
-  git clone https://github.com/mobin-gpr/fox-web-api.git
+git clone https://github.com/mobin-gpr/fox-web-api.git
 ```
 
 Go to the project directory
 
 ```bash
-  cd fox-web-api
+cd fox-web-api
 ```
 
-Install dependencies
+
+Run with docker
 
 ```bash
-  pip3 install -r requirements.txt
-```
-
-Start the server
-
-```bash
-  python3 manage.py runserver
+docker compose up --build -d
 ```
 ## Options
 
 You can create fake data by:
 
 ```bash
-  python manage.py fake_data
+python manage.py fake_data
 ```
 
 ## Front end 
