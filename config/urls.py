@@ -28,7 +28,7 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
-# API documenting cinfigs
+# API documenting configs
 schema_view = get_schema_view(
     openapi.Info(
         title="FoxWeb API",
