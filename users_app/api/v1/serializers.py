@@ -37,7 +37,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     # Create a new user
     def create(self, validated_attrs):
         request = self.context.get("request")
-        email = validated_attrs.get("email")
+        email = validated_attrs.get("email").lower()
         # raise an error if this email is already exists
         if User.objects.filter(email=email).exists():
             raise serializers.ValidationError({"error": "Email already registered"})
