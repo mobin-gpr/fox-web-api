@@ -32,7 +32,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         # password is not strong
         except serializers.ValidationError:
             raise serializers.ValidationError()
-        return attrs
+        return super().validate(attrs)
 
     # Create a new user
     def create(self, validated_attrs):
